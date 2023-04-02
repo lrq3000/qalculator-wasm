@@ -2,6 +2,7 @@
 #include <libqalculate/Calculator.h>
 #include <libqalculate/Variable.h>
 
+using namespace std;
 using namespace emscripten;
 
 Calculator calc;
@@ -12,17 +13,17 @@ PrintOptions printops;
 
 struct Calculation
 {
-	std::string input;
-	std::string output;
-	std::string messages;
+	string input;
+	string output;
+	string messages;
 };
 
-Calculation calculate(std::string calculation, int timeout = 500, int optionFlags = 0)
+Calculation calculate(string calculation, int timeout = 500, int optionFlags = 0)
 {
 	calculator->clearMessages();
 
 	calculation = calc.unlocalizeExpression(calculation, evalops.parse_options);
-	std::string parsed_str;
+	string parsed_str;
 	bool resultIsComparison;
 	auto result = calc.calculateAndPrint(calculation, timeout, evalops, printops, AUTOMATIC_FRACTION_AUTO, AUTOMATIC_APPROXIMATION_AUTO, &parsed_str, -1, &resultIsComparison, true, 2, TAG_TYPE_HTML);
 
@@ -33,7 +34,7 @@ Calculation calculate(std::string calculation, int timeout = 500, int optionFlag
 	if ((message = calculator->message()))
 	{
 		auto msgType = message->type();
-		std::string severity = msgType == MESSAGE_INFORMATION ? "Info" : msgType == MESSAGE_WARNING ? "Warning"
+		string severity = msgType == MESSAGE_INFORMATION ? "Info" : msgType == MESSAGE_WARNING ? "Warning"
 																									: "Error";
 		ret.messages += severity + ": " + message->message() + "\n";
 	}
@@ -43,14 +44,14 @@ Calculation calculate(std::string calculation, int timeout = 500, int optionFlag
 
 struct VariableInfo
 {
-	std::string name;
-	std::string description;
-	std::string aliases;
+	string name;
+	string description;
+	string aliases;
 };
 
-std::vector<VariableInfo> getVariables()
+vector<VariableInfo> getVariables()
 {
-	std::vector<VariableInfo> variables;
+	vector<VariableInfo> variables;
 	for (auto &variable : calc.variables)
 	{
 		if (!variable->isKnown() || variable->isHidden())
@@ -78,6 +79,12 @@ std::vector<VariableInfo> getVariables()
 	return variables;
 }
 
+void setVariables(string variables)
+{
+	calc.resetVariables();
+	// to add
+}
+
 int main()
 {
 	calc.loadGlobalDefinitions();
@@ -86,13 +93,12 @@ int main()
 	printops.base_display = BASE_DISPLAY_NORMAL;
 	printops.digit_grouping = DIGIT_GROUPING_STANDARD;
 	printops.indicate_infinite_series = true;
-	evalops.parse_options.angle_unit = ANGLE_UNIT_RADIANS;
 	evalops.parse_options.unknowns_enabled = false;
 	evalops.parse_options.limit_implicit_multiplication = true;
 	return 0;
 }
 
-std::string info()
+string info()
 {
 	return "libqalculate by Hanna Knutsson, compiled by Stephan Troyer";
 }
