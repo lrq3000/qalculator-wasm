@@ -33,6 +33,14 @@
 			.join('\n');
 		update(false);
 	}
+
+	let localCustomUnits = settings.customUnits;
+
+	function updateCustomUnits() {
+		settings.customUnits = localCustomUnits;
+		// TODO
+		update(false);
+	}
 </script>
 
 <div class="setting">
@@ -96,9 +104,12 @@
 	/>
 	Use units<br />
 	{#if settings.useUnits}
-	<span style="color:#BBFFBB">c</span> = <span style="color:#AAFFFF">299 792 458</span> <span style="color:#BBFFBB">m ∕ s</span>
+		<span style="color:#BBFFBB">c</span> =
+		<span style="color:#AAFFFF">299 792 458</span>
+		<span style="color:#BBFFBB">m ∕ s</span>
 	{:else}
-	<span style="color:#BBFFBB">c</span> = <span style="color:#AAFFFF">299 792 458</span>
+		<span style="color:#BBFFBB">c</span> =
+		<span style="color:#AAFFFF">299 792 458</span>
 	{/if}
 </label>
 
@@ -133,6 +144,11 @@
 		<span style="color:#AAFFFF">34,5</span>
 	{/if}
 </label>
+
+<div class="setting">
+	Custom variables<br />
+	<textarea bind:value={localCustomUnits} on:blur={updateCustomUnits} placeholder="42 = myVariable = anotherAlias" />
+</div>
 
 <div class="setting">
 	Additional settings (one per line)

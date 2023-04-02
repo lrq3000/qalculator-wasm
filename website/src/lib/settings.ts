@@ -20,6 +20,8 @@ export class Settings {
 
 	useDecimalPoint = false;
 
+	customUnits = '';
+
 	additionalOptions = '';
 
 	load() {
@@ -44,7 +46,8 @@ export class Settings {
 		this.useUnitPrefixes = settings.useUnitPrefixes ?? true;
 		this.useDecimalPoint =
 			settings.useDecimalPoint ?? getLocaleDecimalPoint() === '.';
-		this.additionalOptions = settings.additionalOptions ?? false;
+		this.customUnits = settings.customUnits ?? '';
+		this.additionalOptions = settings.additionalOptions ?? '';
 	}
 
 	save() {
